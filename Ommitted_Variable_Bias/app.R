@@ -80,9 +80,9 @@ omit_graph(corrxz=0.5, bx=2, bz=2)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-    numericInput("bx", "Beta x",value=2),
-    numericInput("bz", "Beta z",value=2),
-    numericInput("b0", "Intercept",value=5),
+    numericInput("bx", "Beta x",value=1),
+    numericInput("bz", "Beta z",value=1),
+    numericInput("b0", "Intercept",value=0),
     numericInput("corrXZ","Correlation(x,z)", min=-0.99, max=0.99,value=0.5),
     
     plotOutput(outputId = "biasPlot")
