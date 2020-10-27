@@ -39,28 +39,36 @@ omit_graph <- function (corrxz = 0.4, intercept = 5, bx = 2, bz = 2) {
     
     
     out <- ggplot(data = data, mapping = aes(x = x, y = y)) +
-        #geom_point() + 
+        geom_point(alpha = 0) + 
         
         geom_abline(intercept = intercept, slope = bx, size = 1, color = "orange") +
         
         geom_abline(intercept = summary1$coefficients[1,1], slope = summary1$coefficients[2,1], size = 1, color = "red") +
-        geom_ribbon(aes(ymin=summary1$coefficients[1,1] + x*(summary1$coefficients[2,1] - 1.96 * summary1$coefficients[2,2]),
-                        ymax=summary1$coefficients[1,1] + x*(summary1$coefficients[2,1] + 1.96 * summary1$coefficients[2,2])),
-                    color = "red", alpha=0.5) +
         
         geom_abline(intercept = summary2$coefficients[1,1], slope = summary2$coefficients[2,1], size = 1, color = "blue") +
-        geom_ribbon(aes(ymin=summary2$coefficients[1,1] + x*(summary2$coefficients[2,1] - 1.96 * summary2$coefficients[2,2]),
-                        ymax=summary2$coefficients[1,1] + x*(summary2$coefficients[2,1] + 1.96 * summary2$coefficients[2,2])),
-                    color = "blue", alpha=0.5) +
         
-        #geom_hline(yintercept = mean(data$y), size=1, color="purple") +
-        #geom_smooth(method="lm", aes(x=x, y=y, ymin=lci1, ymax=uci1)) +
+        xlim(0,NA) +
+        ylim(0,NA) +
+        
+        
+        annotate("text",
+                 x = 2,
+                 y = summary1$coefficients[1,1] + 2 * summary1$coefficients[2,1],
+                 #angle = atan(summary1$coefficients[2,1] * data$x_to_y)  * 180/pi,
+                 label = str_c("Biased Estimate: ", round(summary1$coefficients[2,1], digits=2))) +
+        
+        
+        annotate("text",
+                 x = 2,
+                 y = summary2$coefficients[1,1] + 2 * summary2$coefficients[2,1],
+                 #angle = atan(summary1$coefficients[2,1] * data$x_to_y)  * 180/pi,
+                 label = str_c("Unbiased Estimate: ", round(summary2$coefficients[2,1], digits=2))) +
         theme_bw()
     
     return(out)
 }
 
-omit_graph(corrxz=0.5, bx=1, bz=10)
+omit_graph(corrxz=0.5, bx=2, bz=2)
 
 
 
@@ -96,17 +104,9 @@ ggplot(data = data, mapping = aes(x = x, y = y)) +
     geom_abline(intercept = 5, slope = 2, size = 1, color = "orange") +
     
     geom_abline(intercept = summary1$coefficients[1,1], slope = summary1$coefficients[2,1], size = 1, color = "red") +
-    #geom_ribbon(aes(ymin=summary1$coefficients[1,1] + x*(summary1$coefficients[2,1] - 1.96 * summary1$coefficients[2,2]),
-    #                ymax=summary1$coefficients[1,1] + x*(summary1$coefficients[2,1] + 1.96 * summary1$coefficients[2,2])),
-    #            color = "red", alpha=0.5) +
 
     geom_abline(intercept = summary2$coefficients[1,1], slope = summary2$coefficients[2,1], size = 1, color = "blue") +
-    #geom_ribbon(aes(ymin=summary2$coefficients[1,1] + x*(summary2$coefficients[2,1] - 1.96 * summary2$coefficients[2,2]),
-    #                ymax=summary2$coefficients[1,1] + x*(summary2$coefficients[2,1] + 1.96 * summary2$coefficients[2,2])),
-    #            color = "blue", alpha=0.5) +
-    
-    #geom_hline(yintercept = mean(data$y), size=1, color="purple") +
-    #geom_smooth(method="lm", aes(x=x, y=y, ymin=lci1, ymax=uci1)) +
+
     xlim(0,NA) +
     ylim(0,NA) +
     
@@ -125,76 +125,10 @@ ggplot(data = data, mapping = aes(x = x, y = y)) +
              label = str_c("Unbiased Estimate: ", round(summary2$coefficients[2,1], digits=2))) +
     theme_bw()
 
-mean(data$x) 
-
-
-summary1$coefficients
-summary1$coefficients[1,1] # intercept
-summary1$coefficients[2,1] # predicted B
-summary1$coefficients[2,2] # SE
-
-data$fit1 <- data$x *
 
 
 
-preds1 = predict(modelOut[[1]], interval="confidence")
-data <- cbind(data,preds1)
-data <- data %>%
-    rename(fit1 = fit,
-           lwr1 = lwr,
-           upr1 = upr)
 
-
-
-names(preds1)
-head(preds1)
-
-predslm = predict(fitlm, interval = "confidence")
-head(predslm)
-
-
-ggplot(data = data, mapping = aes(x = x, y = y)) +
-    geom_point() + 
-    geom_line(aes(y=fit1), size=1, color="red") +
-    geom_ribbon(aes(ymin = lwr1, ymax = upr1), alpha = .15) +
-    #geom_smooth(method="lm", aes(x=x, y=y, ymin=lci1, ymax=uci1)) +
-    theme_bw()
-
-
-
-### adding the second line
-
-
-preds2 = predict(modelOut[[2]], interval="confidence", terms="x")
-head(preds2)
-data <- cbind(data,preds2)
-data <- data %>%
-    rename(fit2 = fit,
-           lwr2 = lwr,
-           upr2 = upr)
-
-ggplot(data = data, mapping = aes(x = x, y = y)) +
-    geom_point() + 
-    geom_line(aes(y=fit1), size=1, color="red") +
-    geom_ribbon(aes(ymin = lwr1, ymax = upr1), alpha = .15) +
-    geom_line(aes(y=fit2), size=1, color="blue") +
-    #geom_smooth(method="lm", aes(x=x, y=y, ymin=lci1, ymax=uci1)) +
-    theme_bw()
-
-
-
-###******************************************************************************************###
-model <- lm(data = df, Response ~ Memory + Cpu)
-df$model <- stats::predict(model, newdata=df)
-err <- stats::predict(model, newdata=df, se = TRUE)
-df$ucl <- err$fit + 1.96 * err$se.fit
-df$lcl <- err$fit - 1.96 * err$se.fit
-
-g <- ggplot(df)
-g <- g + geom_point(aes(x=Response, y = model), size = 2, colour = "blue")
-g <- g + geom_smooth(data=df, aes(x=Response, y=model, ymin=lcl, ymax=ucl), size = 1.5, 
-                     colour = "red", se = TRUE, stat = "smooth")
-###******************************************************************************************###
 
 
 # Define UI for application that draws a histogram
