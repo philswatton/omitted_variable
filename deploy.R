@@ -7,4 +7,4 @@ rsconnect::setAccountInfo(name='philswatton',
                           token='AA02538D4AA16CE67C7E38E72DB0A466',
                           secret='<SECRET>')
 
-rsconnect::deployApp('C:\\Users\\User\\Documents\\Projects\\ommitted_variable')
+rsconnect::deployApp('C:\\Users\\User\\Documents\\Projects\\omitted_variable')

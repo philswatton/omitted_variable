@@ -1,5 +1,5 @@
 #### Phil Swatton - University of Essex/UCL ####
-# Shiny app designed to let students visualise the effect of ommitted variable bias
+# Shiny app designed to let students visualise the effect of omitted variable bias
 
 # packages used:
 library(shiny)
@@ -10,7 +10,7 @@ library(DiagrammeR)
 
 # Define frontend UI for application
 ui <- fluidPage(
-  title = 'Ommitted Variable Bias',
+  title = 'Omitted Variable Bias',
   withMathJax(),
   tags$div(HTML("<script type='text/x-mathjax-config' >
             MathJax.Hub.Config({
@@ -20,7 +20,7 @@ ui <- fluidPage(
             ")), #with thanks to https://stackoverflow.com/questions/54876731/inline-latex-equations-in-shiny-app-with-mathjax
   
   
-  titlePanel("Ommitted Variable Bias"),
+  titlePanel("Omitted Variable Bias"),
   sidebarLayout(
     sidebarPanel(
       numericInput("bx", withMathJax("$B_x$"),value=1),
@@ -47,7 +47,7 @@ server <- function(input, output) {
             
             helpText(str_c("At the moment, given the inputs, the formula for y is $y=",input$b0,"+",input$bx,"*x+",input$bz,"*z$.")),
             
-            helpText(str_c("When we estimate the value of $B_x$, we denote the estimator $b_x$. When our estimate doesn't suffer from ommitted variable bias, it should be an unbiased estimate of $B_x$. So we say the expected value of $b_x$ is $E[b_x]=",input$bx,"$.")),
+            helpText(str_c("When we estimate the value of $B_x$, we denote the estimator $b_x$. When our estimate doesn't suffer from omitted variable bias, it should be an unbiased estimate of $B_x$. So we say the expected value of $b_x$ is $E[b_x]=",input$bx,"$.")),
             
             helpText("However, if there is a confounding variable $z$ that both has an effect on $y$ and correlates with $x$, then failure to include this will result in bias for our estimate $b_x$"),
             
