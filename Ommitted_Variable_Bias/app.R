@@ -11,7 +11,6 @@ library(shiny)
 library(faux)
 library(tidyverse)
 library(DiagrammeR)
-library(texreg)
 
 
 omit_graph <- function (corrxz = 0.4, intercept = 5, bx = 2, bz = 2) {
@@ -72,7 +71,26 @@ omit_graph <- function (corrxz = 0.4, intercept = 5, bx = 2, bz = 2) {
 omit_graph(corrxz=0.5, bx=2, bz=2)
 
 
+grViz(str_c("digraph {
 
+  # a 'graph' statement
+  graph [layout = dot,
+       rankdir = LR,
+  overlap = true,
+  fontsize = 10]
+
+  # several 'node' statements
+  node [shape = circle]
+  X, Y, Z
+
+  # several 'edge' statements
+  X->Y[label = 'bx: ",1,"', color = red, fontcolor = red]
+  Z->Y[label = 'bz: ",1,"', color = orange, fontcolor = orange]
+  X->Z[dir=both, label = 'corr(x,z): ",0.5,"', color = blue, fontcolor = blue]
+}"))
+
+
+# biased result: E[bx] = bx + c * bz
 
 
 
@@ -85,11 +103,31 @@ ui <- fluidPage(
     numericInput("b0", "Intercept",value=0),
     numericInput("corrXZ","Correlation(x,z)", min=-0.99, max=0.99,value=0.5),
     
+    grVizOutput(outputId = "diagram"),
     plotOutput(outputId = "biasPlot")
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
+    
+    output$diagram <- renderGrViz({
+        grViz(str_c("digraph {
+
+  # a 'graph' statement
+  graph [layout = circo,
+  overlap = true,
+  fontsize = 10]
+
+  # several 'node' statements
+  node [shape = circle]
+  X, Y, Z
+
+  # several 'edge' statements
+  X->Y[label = 'bx: ",input$bx,"', color = red, fontcolor = red]
+  Z->Y[label = 'bz: ",input$bz,"', color = orange, fontcolor = orange]
+  X->Z[dir=both, label = 'corr(x,z): ",input$corrXZ,"', color = blue, fontcolor = blue]
+}"))
+        })
     
     output$biasPlot <- renderPlot({
         data <- rnorm_multi(n = 1000,
