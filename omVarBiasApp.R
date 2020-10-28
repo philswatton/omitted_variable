@@ -55,7 +55,7 @@ server <- function(input, output) {
             
             helpText(str_c("So, the expected value of $b_1$ given the current inputs is $E[b_x] = ",input$bx,"+",input$corrXZ,"*",input$bz,"=",(input$bx+input$corrXZ*input$bz),"$.")),
             
-            helpText("The graph to the right is produced by simulating data based on the above inputs, then fitting an unbiased model that includes both x and z, and a 'biased' model that only includes x."),
+            helpText("The graph to the right is produced by simulating data based on the above inputs, then fitting an unbiased model that includes both x and z, and a 'biased' model that only includes x. The unbiased model is represented by the full blue line, while the biased model is represented by the dashed red line."),
             
             helpText("Of course, the bias depends entirely on $c * B_z$ - if one of these components is 0, the 'biased' estimate will also be ubiased! Try this now."),
             
@@ -113,7 +113,11 @@ server <- function(input, output) {
             
             #geom_abline(intercept = intercept, slope = bx, size = 1, color = "orange") +
             
-            geom_abline(intercept = summary1$coefficients[1,1], slope = summary1$coefficients[2,1], size = 1, color = "red") +
+            geom_abline(intercept = summary1$coefficients[1,1],
+                        slope = summary1$coefficients[2,1],
+                        size = 1,
+                        color = "red",
+                        linetype=2) +
             
             geom_abline(intercept = summary2$coefficients[1,1], slope = summary2$coefficients[2,1], size = 1, color = "blue") +
             
