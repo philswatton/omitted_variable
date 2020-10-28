@@ -53,7 +53,7 @@ server <- function(input, output) {
             
             helpText("We can calculate the expected value of $b_x$ with the formula $E[b_x] = B_x + c * B_z$, where $c$ is the correlation between $x$ and $z$."),
             
-            helpText(str_c("So, the expected value of $b_1$ given the current inputs is $E[b_x] = ",input$bx,"+",input$corrXZ,"*",input$bz,"=",(input$bx+input$corrXZ*input$bz),"$.")),
+            helpText(str_c("So, the expected value of $b_x$ when $z$ is omitted given the current inputs is $E[b_x] = ",input$bx,"+",input$corrXZ,"*",input$bz,"=",(input$bx+input$corrXZ*input$bz),"$.")),
             
             helpText("The graph to the right is produced by simulating data based on the above inputs, then fitting an unbiased model that includes both x and z, and a 'biased' model that only includes x. The unbiased model is represented by the full blue line, while the biased model is represented by the dashed red line."),
             
